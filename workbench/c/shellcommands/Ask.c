@@ -45,6 +45,8 @@
 
 ******************************************************************************/
 
+#define NO_INLINE_STDARG
+
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <dos/dos.h>
@@ -76,7 +78,7 @@ AROS_SHA(STRPTR, ,PROMPT,/A,NULL))
 
     while (ready == 0)
     {
-	Printf("%s ", SHArg(PROMPT));
+	VPrintf("%s ", (APTR)&SHArg(PROMPT));
 	Flush(Output());
 	
         if (FGets(Input(), buffer, 100) == (STRPTR)buffer)

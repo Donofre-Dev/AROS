@@ -1,6 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
-    $Id$
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
  
     Desc: 
     Lang: English              
@@ -52,8 +51,7 @@
 #include <proto/dos.h>
 #include <proto/debug.h>
 #include <proto/alib.h>
-
-#include <string.h>
+#include <proto/utility.h>
 
 #define ARG_TEMPLATE "TASK/K,DEBUG/S"
 
@@ -67,6 +65,15 @@ static char s[256];
 
 static UBYTE outbuffer[20000];
 static LONG outbuffer_size;
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
+}
 
 static void Cleanup(char *msg)
 {
@@ -95,7 +102,7 @@ static int out (const UBYTE * fmt, ...)
     va_start (ap, fmt);
 
     VNewRawDoFmt(fmt, RAWFMTFUNC_STRING, &outbuffer[outbuffer_size], ap);
-    result = strlen(&outbuffer[outbuffer_size]);
+    result = Strlen(&outbuffer[outbuffer_size]);
 
     if (Args[ARG_DEBUG])
         KPutStr(&outbuffer[outbuffer_size]);

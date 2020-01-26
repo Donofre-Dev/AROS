@@ -82,9 +82,6 @@
 #include <dos/dosextens.h>
 #include <exec/types.h>
 
-#include <strings.h>
-#include <stdio.h>
-
 #include <aros/shcommands.h>
 
 static void printProcess(struct DosLibrary *DOSBase, BOOL full, BOOL tcb, BOOL all,

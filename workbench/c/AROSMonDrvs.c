@@ -1,6 +1,5 @@
 /*
-    Copyright © 1995-2017, The AROS Development Team. All rights reserved.
-    $Id$
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
 
     Desc: Code that loads and initializes necessary HIDDs.
     Lang: english
@@ -61,9 +60,6 @@
 
 #include <aros/shcommands.h>
 
-#include <stdlib.h>
-#include <string.h>
-
 #define MONITORS_DIR     "DEVS:Monitors"
 #define COMPOSITING_NAME "Compositor"
 
@@ -90,7 +86,7 @@ static BYTE checkIcon(STRPTR name, struct Library *IconBase)
 
 	if ((s = FindToolType(toolarray, "STARTPRI")))
 	{
-	    pri = atol(s);
+	    StrToLong(s, &pri);
 	    if (pri < -128)
 	        pri = -128;
 	    else if (pri > 127)
@@ -176,7 +172,7 @@ static void loadMonitors(struct List *monitorsList, struct DosLibrary *DOSBase,
     D(bug("--------------------------\n"));
 }
 
-AROS_SH2H(AROSMonDrvs, 1.0, "Load AROS Monitor and Compositor drivers",
+AROS_SH2H(AROSMonDrvs, 1.1, "Load AROS Monitor and Compositor drivers",
         AROS_SHAH(BOOL, , NOCOMPOSITION,/S,FALSE, "Only load Monitors"),
         AROS_SHAH(BOOL, , ONLYCOMPOSITION,/S,FALSE, "Only load Compositor"))
 {

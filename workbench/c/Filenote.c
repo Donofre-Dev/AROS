@@ -89,8 +89,8 @@
 #include <exec/memory.h>
 #include <utility/utility.h>
 
-#include <ctype.h>
-#include <string.h>
+//#include <ctype.h>
+//#include <string.h>
 
 #ifdef __AROS__
 #include <aros/rt.h>
@@ -117,7 +117,8 @@
 
 const TEXT version[] = "$VER: Filenote 41.3 (7.5.2015)\n";
 
-int Do_Filenote(struct AnchorPath *, STRPTR, STRPTR, LONG, LONG);
+static int Do_Filenote(struct AnchorPath *, STRPTR, STRPTR, LONG, LONG);
+static ULONG Strlen(CONST_STRPTR string);
 
 int __nocommandline;
 
@@ -179,10 +180,10 @@ int main(void)
  */
 #define MATCHED_FILE    0
 
-void PrintFileName(struct AnchorPath *, LONG);
-int SafeSetFileComment(struct AnchorPath *, char *);
+static void PrintFileName(struct AnchorPath *, LONG);
+static int SafeSetFileComment(struct AnchorPath *, char *);
 
-int Do_Filenote(struct AnchorPath *a,
+static int Do_Filenote(struct AnchorPath *a,
                 STRPTR File,
                 STRPTR Comment,
                 LONG All,
@@ -289,7 +290,7 @@ int Do_Filenote(struct AnchorPath *a,
 } /* Do_Filenote */
 
 
-void PrintFileName(struct AnchorPath *a, LONG t)
+static void PrintFileName(struct AnchorPath *a, LONG t)
 {
     int i;
 
@@ -312,7 +313,7 @@ void PrintFileName(struct AnchorPath *a, LONG t)
 } /* PrintFileName */
 
 
-int SafeSetFileComment(struct AnchorPath *a, char *c)
+static int SafeSetFileComment(struct AnchorPath *a, char *c)
 {
     int Return_Value;
 
@@ -324,7 +325,7 @@ int SafeSetFileComment(struct AnchorPath *a, char *c)
         Return_Value = RETURN_ERROR;
     }
     else
-    if (strlen(c) > 79)
+    if (Strlen(c) > 79)
     {
         VPrintf("Note truncated to 79 characters\n", NULL);
         Return_Value = RETURN_WARN;
@@ -333,3 +334,13 @@ int SafeSetFileComment(struct AnchorPath *a, char *c)
     return Return_Value;
 
 } /* SafeSetFileComment */
+
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
+}

@@ -1,6 +1,5 @@
 /*
-    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
-    $Id$
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
 
     Delete CLI Command.
 */
@@ -63,12 +62,11 @@
 
 #include <proto/dos.h>
 #include <proto/exec.h>
+#include <proto/utility.h>
 
 #include <dos/dos.h>
 #include <dos/dosasl.h>
 #include <exec/memory.h>
-
-#include <string.h>
 
 
 #define ARG_TEMPLATE    "FILE/M/A,ALL/S,QUIET/S,FORCE/S,FOLLOWLINKS/S"
@@ -87,12 +85,13 @@ enum
 /* Maximum file path length */
 #define MAX_PATH_LEN    2048
 
-const TEXT version[] = "$VER: Delete 41.3 (27.7.2016)\n";
+const TEXT version[] = "$VER: Delete 41.4 (" ADATE ")\n";
 static char cmdname[] = "Delete";
 
 
-int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
+static int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
 	     BOOL force, BOOL forcelinks);
+static ULONG Strlen(CONST_STRPTR string);
 
 int __nocommandline;
 
@@ -201,7 +200,7 @@ static inline BOOL isDirectory(struct AnchorPath *ap, BOOL followflag)
 
 #define isDeletable(fib) (!((fib)->fib_Protection & FIBF_DELETE))
 
-int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
+static int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
 	     BOOL force, BOOL forcelinks)
 {
     LONG  match = 0;
@@ -219,7 +218,7 @@ int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
     for (i = 0; files[i] != NULL; i++)
     {
 	/* Index for last character in the current file name (pattern name) */
-	int lastIndex = strlen(files[i]) - 1;
+	int lastIndex = Strlen(files[i]) - 1;
 
 	if (files[i][lastIndex] == ':')
 	{
@@ -324,7 +323,7 @@ int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
                     deleteit = FALSE;
                 }
             }
-            strcpy(name, ap->ap_Buf);
+            Strlcpy(name, ap->ap_Buf, sizeof name);
 	}
         MatchEnd(ap);
         if (deleteit)
@@ -367,4 +366,14 @@ int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
         return RETURN_WARN;
     }
     return RETURN_OK;
+}
+
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
 }

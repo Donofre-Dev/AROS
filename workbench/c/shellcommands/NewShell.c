@@ -92,7 +92,6 @@
 #include <dos/dosextens.h>
 #include <dos/dostags.h>
 #include <aros/asmcall.h>
-#include <string.h>
 
 #include <aros/shcommands.h>
 

@@ -5,8 +5,6 @@
 
 #include <proto/dos.h>
 
-#include <stdio.h>
-
 #include "buffer.h"
 #include "Shell.h"
 

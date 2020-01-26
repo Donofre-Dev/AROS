@@ -11,7 +11,7 @@
 /****************************************************************************************************
      Currently Supports:
 
-        i386 compatable families...
+        i386 compatible families...
             AMD 486/5x86/K5/K6/K6-II/K6-III/Athlon/Duron/Opteron/Athlon64
             Intel P5/P54C/P55C/P24T/P6/P2/P3/PM/Itanium(IA-64) 
             Cyrix  5x86/M1/MediaGX/M2
@@ -39,13 +39,6 @@
 #include    <dos/dos.h>
 
 #include    <devices/timer.h>
-
-#include    <sys/time.h>
-
-#include    <stdio.h>
-#include    <stdlib.h>
-#include    <string.h>
-#include    <time.h>
 
 #include    <asm/io.h>
 

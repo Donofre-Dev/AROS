@@ -1,6 +1,5 @@
 /*
-    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
-    $Id$
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
 
     Wait CLI Command.
 */
@@ -54,12 +53,13 @@
 
 #include <proto/dos.h>
 #include <proto/exec.h>
+#include <proto/utility.h>
 
-#include <string.h>
-
-const TEXT version[] = "$VER: Wait 41.2 (30.4.2000)\n";
+const TEXT version[] = "$VER: Wait 41.3 (" ADATE ")\n";
 
 int __nocommandline;
+
+static ULONG Strlen(CONST_STRPTR string);
 
 int main (void)
 {
@@ -89,16 +89,16 @@ int main (void)
 	DateStamp(&ds);	
 	now_secs = ds.ds_Minute * 60 + ds.ds_Tick / TICKS_PER_SECOND;
 
-	if (strlen((char *)args[3]) > 5)
+	if (Strlen((char *)args[3]) > 5)
 	{
 	    PutStr("Time should be HH:MM");
 	    ERROR(RETURN_FAIL);
 	}
 
-	strcpy(timestring, (UBYTE *)args[3]);
-	strcat(timestring, ":00");
+	Strlcpy(timestring, (UBYTE *)args[3], sizeof timestring);
+	Strlcat(timestring, ":00", sizeof timestring);
 		
-	memset(&dt, 0, sizeof(dt));	
+	SetMem(&dt, 0, sizeof(dt));	
 	dt.dat_StrTime = timestring;
 
 	if (!StrToDate(&dt))
@@ -218,4 +218,13 @@ end:
     }
 
     return error;
+}
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
 }

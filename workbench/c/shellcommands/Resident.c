@@ -66,13 +66,11 @@
 ******************************************************************************/
 
 #include <proto/dos.h>
+#include <proto/utility.h>
 #include <dos/dosextens.h>
-#include <string.h>
 #include <exec/lists.h>
 #include <exec/nodes.h>
 #include <exec/memory.h>
-
-#include <string.h>
 
 #include <aros/shcommands.h>
 
@@ -83,6 +81,7 @@ struct SegNode
 };
 
 static struct SegNode *NewSegNode(struct ExecBase *SysBase, STRPTR name, LONG uc);
+static ULONG Strlen(CONST_STRPTR string);
 
 AROS_SH7(Resident, 41.2,
 AROS_SHA(STRPTR, ,NAME, ,NULL),
@@ -214,7 +213,7 @@ AROS_SHA(BOOL, ,SYSTEM,/S,FALSE))
 
 	/* WB1.x backwards compatibility hack, do not allow
 	 * override of built-in resident or to add l:shell-seg (CLI) */
-	if (!stricmp(name, "resident") || !stricmp(name, "cli")) {
+	if (!Stricmp(name, "resident") || !Stricmp(name, "cli")) {
 	    SetIoErr(ERROR_OBJECT_WRONG_TYPE);
 	    UnLoadSeg(seglist);
 	    return 1; /* yes, return code = 1 in this special case */
@@ -296,7 +295,7 @@ AROS_SHA(BOOL, ,SYSTEM,/S,FALSE))
 
 static STRPTR myStrDup(struct ExecBase *SysBase, STRPTR str)
 {
-    size_t len = strlen(str)+1;
+    size_t len = Strlen(str)+1;
     STRPTR ret = (STRPTR) AllocVec(len, MEMF_ANY);
 
     if (ret)
@@ -326,4 +325,13 @@ static struct SegNode *NewSegNode(struct ExecBase *SysBase, STRPTR name,
     }
 
     return NULL;
+}
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
 }

@@ -1,6 +1,5 @@
 /*
-    Copyright © 2006-2012, The AROS Development Team. All rights reserved.
-    $Id$
+    Copyright © 2006-2020, The AROS Development Team. All rights reserved.
 
     Desc: IconX WB script starter
     Lang: English
@@ -67,10 +66,6 @@
 
 #include <workbench/startup.h>
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-
 /* some default values */
 #define DEFWINDOW "con:0/50//120/IconX/AUTO/WAIT/CLOSE"
 #define DEFSTACK  (40960)
@@ -79,12 +74,12 @@
 
 #define BASECOMMAND "EXECUTE "
 
-const TEXT version[] = "\0$VER: IconX 41.4 (2.8.2014)";
+const TEXT version[] = "\0$VER: IconX 41.5 (" ADATE ")";
 int __forceerrorrequester = 1;
 static TEXT errbuffer[255];
 
 
-void displayMsg(LONG code)
+static void displayMsg(LONG code)
 {
     if (code)
     {
@@ -95,7 +90,7 @@ void displayMsg(LONG code)
     }
 }
 
-STRPTR AllocateNameFromLock(BPTR lock)
+static STRPTR AllocateNameFromLock(BPTR lock)
 {
     ULONG  length = 512;
     STRPTR buffer = NULL;
@@ -146,7 +141,7 @@ STRPTR AllocateNameFromLock(BPTR lock)
 
 
 
-STRPTR BuildCommandLine(struct WBStartup *startup)
+static STRPTR BuildCommandLine(struct WBStartup *startup)
 {
     const struct WBStartup *wbsstate = startup;
     STRPTR                  buffer   = NULL;
@@ -265,7 +260,7 @@ int main(int argc, char **argv)
         }
         if ((s = FindToolType(toolarray, "STACK")))
         {
-            ixStack = atol(s);
+            StrToLong(s, &ixStack);
         }
         if ((s = FindToolType(toolarray, "USERSHELL")))
         {
@@ -276,11 +271,15 @@ int main(int argc, char **argv)
         }
         if ((s = FindToolType(toolarray, "WAIT")))
         {
-            ixWait += atol(s) * 50;
+            LONG val;
+            StrToLong(s, &val);
+            ixWait += (val * 50);
         }
         if ((s = FindToolType(toolarray, "DELAY")))
         {
-            ixWait += atol(s);
+            LONG val;
+            StrToLong(s, &val);
+            ixWait += val;
         }
     }
     else

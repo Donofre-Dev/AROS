@@ -62,8 +62,6 @@
 #include <proto/keymap.h>
 #include <proto/kms.h>
 
-#include <string.h>
-
 const TEXT version[] = "$VER: SetKeyboard 41.3 (03.03.2011)\n";
 
 #define ARG_TEMPLATE "KEYMAP/A"

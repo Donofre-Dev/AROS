@@ -45,7 +45,6 @@
 ******************************************************************************/
 
 
-#include <stdio.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <dos/dos.h>

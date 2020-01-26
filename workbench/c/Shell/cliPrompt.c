@@ -5,8 +5,6 @@
 
 #include <proto/dos.h>
 
-#include <string.h>
-
 #include "Shell.h"
 
 void cliPrompt(ShellState *ss)

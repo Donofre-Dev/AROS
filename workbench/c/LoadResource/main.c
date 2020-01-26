@@ -13,8 +13,7 @@
 #include <exec/io.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
-
-#include <string.h>
+#include <proto/utility.h>
 
 #include "locale.h"
 
@@ -33,8 +32,9 @@ enum
 #define TEMPLATE     "NAME/M/A"
 #define ERROR_HEADER "LoadResource"
 
-BOOL process(CONST_STRPTR name);
-BOOL dev_process(CONST_STRPTR name);
+static BOOL process(CONST_STRPTR name);
+static BOOL dev_process(CONST_STRPTR name);
+static ULONG Strlen(CONST_STRPTR string);
 
 int main(void)
 {
@@ -52,9 +52,9 @@ int main(void)
             while ((name = *names++) != NULL)
             {
                 BOOL res;
-                int len = strlen(name);
+                int len = Strlen(name);
                 
-                if ((len > 7) && (!strcmp(&name[len-7], ".device")))
+                if ((len > 7) && (!Stricmp(&name[len-7], ".device")))
                     res = dev_process(name);
                 else
                     res = process(name);
@@ -81,7 +81,7 @@ int main(void)
     return rc;
 }
 
-BOOL process(CONST_STRPTR name)
+static BOOL process(CONST_STRPTR name)
 {
     struct Library *lb = OpenLibrary(name, 0L);
     
@@ -99,11 +99,11 @@ BOOL process(CONST_STRPTR name)
     }
 }
 
-BOOL dev_process(CONST_STRPTR name)
+static BOOL dev_process(CONST_STRPTR name)
 {
     struct IORequest req;
     BOOL retval = FALSE;
-    memset(&req, 0, sizeof(req));
+    SetMem(&req, 0, sizeof(req));
     req.io_Message.mn_Length = sizeof(req);
 #if defined(__AROSPLATFORM_SMP__)
     void *ExecLockBase = OpenResource("execlock.resource");
@@ -145,4 +145,13 @@ BOOL dev_process(CONST_STRPTR name)
     }
 
     return retval;
+}
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
 }

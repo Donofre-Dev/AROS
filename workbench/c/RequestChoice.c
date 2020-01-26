@@ -89,8 +89,6 @@
 #include <intuition/intuition.h>
 #include <intuition/screens.h>
 
-#include <string.h>
-
 #define ARG_TEMPLATE    "TITLE/A,BODY/A,GADGETS/A/M,PUBSCREEN/K"
 #define ARG_TITLE       0
 #define ARG_BODY        1
@@ -98,13 +96,14 @@
 #define ARG_PUBSCREEN   3
 #define TOTAL_ARGS      4
 
-const TEXT version[] = "$VER: RequestChoice 41.3 (3.4.2014)\n";
+const TEXT version[] = "$VER: RequestChoice 41.4 (" ADATE ")\n";
 
 static char ERROR_HEADER[] = "RequestChoice";
 
 static int Do_RequestChoice(STRPTR, STRPTR, STRPTR *, STRPTR);
 static STRPTR FilterBodyText(STRPTR Body);
 static STRPTR ComposeGadgetText(STRPTR * Gadgets);
+static ULONG Strlen(CONST_STRPTR string);
 
 int __nocommandline;
 
@@ -216,7 +215,7 @@ static STRPTR ComposeGadgetText(STRPTR * Gadgets)
 
     for (CurrentGadget = 0; Gadgets[CurrentGadget]; CurrentGadget++)
     {
-        StrLen = strlen(Gadgets[CurrentGadget]);
+        StrLen = Strlen(Gadgets[CurrentGadget]);
         GadgetLength +=  StrLen + 1;
         
         // Count "%"
@@ -241,7 +240,7 @@ static STRPTR ComposeGadgetText(STRPTR * Gadgets)
     BufferPos = GadgetText;
     for (CurrentGadget = 0; Gadgets[CurrentGadget]; CurrentGadget++)
     {
-        int LabelLength = strlen(Gadgets[CurrentGadget]);
+        int LabelLength = Strlen(Gadgets[CurrentGadget]);
 
         for (i = 0; i < LabelLength; i++)
         {
@@ -287,7 +286,7 @@ static STRPTR FilterBodyText(STRPTR Body)
         return NULL;
 
     // Count % characters
-    StrLen = strlen(Body);
+    StrLen = Strlen(Body);
     for (i = 0; i < StrLen; i++)
     {
         if (Body[i] == '%')
@@ -323,3 +322,12 @@ static STRPTR FilterBodyText(STRPTR Body)
     return GadgetText;
 
 } /* FilterBodyText */
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
+}

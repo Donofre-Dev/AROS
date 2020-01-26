@@ -1,9 +1,7 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
-    $Id$
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
 
     Desc: Ask CLI command
-    Lang: English
 */
 
 /******************************************************************************
@@ -47,8 +45,6 @@
 
 ******************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <dos/dos.h>
@@ -58,8 +54,9 @@
 
 static int stripwhites(char * buffer);
 static char * skipwhites(char * buffer);
+static ULONG Strlen(CONST_STRPTR string);
 
-AROS_SH1(Ask, 41.3,
+AROS_SH1(Ask, 41.4,
 AROS_SHA(STRPTR, ,PROMPT,/A,NULL))
 {
     AROS_SHCOMMAND_INIT
@@ -138,7 +135,7 @@ AROS_SHA(STRPTR, ,PROMPT,/A,NULL))
 static int stripwhites(char * buffer)
 {
     int len;
-    len = strlen(buffer);
+    len = Strlen(buffer);
 
     while ((len != 0) &&
            (buffer[len - 1] == ' ' ||
@@ -160,4 +157,13 @@ static char *skipwhites(char *buffer)
     }
 
     return buffer;
+}
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
 }

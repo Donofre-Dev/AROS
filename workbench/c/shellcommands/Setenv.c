@@ -81,7 +81,6 @@
 #include <exec/types.h>
 
 #include <utility/tagitem.h>
-#include <stdio.h>
 
 #include <aros/shcommands.h>
 

@@ -1,6 +1,5 @@
 /*
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
-    $Id$
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
 */
 
 /*****************************************************************************
@@ -69,8 +68,6 @@
 #include <dos/dos.h>
 #include <libraries/locale.h>
 
-#include <string.h>
-
 // *****  Layout and version parameters  ***********
 
 #define LOCALE_VERSION   38
@@ -102,21 +99,22 @@ int LocaleBase_version = LOCALE_VERSION;
 
 // *****  Prototypes for internal functions  *******
 
-VOID  PrintFullName(TEXT *buffer, UWORD cut_off, struct AnchorPath *anchor);
-UWORD GetDirName(struct AnchorPath *anchor, TEXT *buffer);
-BOOL  FindString(struct AnchorPath *anchor, IPTR *args, TEXT *pattern,
+static VOID  PrintFullName(TEXT *buffer, UWORD cut_off, struct AnchorPath *anchor);
+static UWORD GetDirName(struct AnchorPath *anchor, TEXT *buffer);
+static BOOL  FindString(struct AnchorPath *anchor, IPTR *args, TEXT *pattern,
 		 struct Locale *locale, UBYTE *pi);
-BOOL  MatchStringNoCase(TEXT *string, TEXT *text, TEXT *text_end, UBYTE *pi,
+static BOOL  MatchStringNoCase(TEXT *string, TEXT *text, TEXT *text_end, UBYTE *pi,
 			struct Locale *locale);
-BOOL MatchString(TEXT *string, TEXT *text, TEXT *text_end, UBYTE *pi,
+static BOOL MatchString(TEXT *string, TEXT *text, TEXT *text_end, UBYTE *pi,
                  struct Locale *locale);
+static ULONG Strlen(CONST_STRPTR string);
 
 
 // *****  String information (version, messages) ***
 
 const TEXT template[] =
      "FROM/M,SEARCH/A,ALL/S,NONUM/S,QUIET/S,QUICK/S,FILE/S,PATTERN/S,CASE/S,LINES/N";
-const TEXT version_string[] = "$VER: Search 42.4 (6.4.2008)";
+const TEXT version_string[] = "$VER: Search 42.5 (" ADATE ")";
 const TEXT locale_name[]    = "locale.library";
 
 const TEXT control_codes[]  = { 0x9b, 'K', 13 };
@@ -169,7 +167,7 @@ int main(void)
 	    
 	    /* Prepare the pattern to be matched */
 	    
-	    pat_length = strlen((TEXT *)args[ARG_SEARCH]);
+	    pat_length = Strlen((TEXT *)args[ARG_SEARCH]);
 	    pat_buf_length = pat_length * 2 + 3;
 	    user_pattern = AllocMem(pat_length + 5, MEMF_CLEAR);
 	    pattern = AllocMem(pat_buf_length, MEMF_ANY);
@@ -409,7 +407,7 @@ int main(void)
 
 
 
-VOID PrintFullName(TEXT *buffer, UWORD cut_off, struct AnchorPath *anchor)
+static VOID PrintFullName(TEXT *buffer, UWORD cut_off, struct AnchorPath *anchor)
 {
     buffer[cut_off] = '\0';
     
@@ -422,16 +420,16 @@ VOID PrintFullName(TEXT *buffer, UWORD cut_off, struct AnchorPath *anchor)
 }
 
 
-UWORD GetDirName(struct AnchorPath *anchor, TEXT *buffer)
+static UWORD GetDirName(struct AnchorPath *anchor, TEXT *buffer)
 {
     if(NameFromLock(anchor->ap_Current->an_Lock, buffer, PATH_BUF_SIZE))
-	return strlen(buffer);
+	return Strlen(buffer);
 
     return 0;
 }
 
 
-BOOL FindString(struct AnchorPath *anchor, IPTR *args, TEXT *pattern,
+static BOOL FindString(struct AnchorPath *anchor, IPTR *args, TEXT *pattern,
 		struct Locale *locale, UBYTE *pi)
 {
     BOOL   found = FALSE, end_early = FALSE, line_matches, at_end;
@@ -628,7 +626,7 @@ BOOL FindString(struct AnchorPath *anchor, IPTR *args, TEXT *pattern,
 }
 
 
-BOOL MatchStringNoCase(TEXT *string, TEXT *text, TEXT *text_end, UBYTE *pi,
+static BOOL MatchStringNoCase(TEXT *string, TEXT *text, TEXT *text_end, UBYTE *pi,
 		       struct Locale *locale)
 {
     TEXT *s, ch;
@@ -652,7 +650,7 @@ BOOL MatchStringNoCase(TEXT *string, TEXT *text, TEXT *text_end, UBYTE *pi,
     return FALSE;
 }
 
-BOOL MatchString(TEXT *string, TEXT *text, TEXT *text_end, UBYTE *pi,
+static BOOL MatchString(TEXT *string, TEXT *text, TEXT *text_end, UBYTE *pi,
                  struct Locale *locale)
 {
 	TEXT *s, ch;
@@ -676,4 +674,12 @@ BOOL MatchString(TEXT *string, TEXT *text, TEXT *text_end, UBYTE *pi,
 	return FALSE;
 }
 
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
+}
 

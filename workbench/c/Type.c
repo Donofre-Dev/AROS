@@ -56,8 +56,6 @@
 #include <proto/dos.h>
 #include <dos/dos.h>
 
-#include <string.h>
-
 const TEXT version[] = "$VER: Type 42.1 (20.10.2005)\n";
 
 #define BUFSIZE 8192

@@ -32,8 +32,6 @@
 #include <dos/exall.h>
 #include <utility/tagitem.h>
 
-#include <string.h>
-
 #define	DEBUG_ASSIGN(x)
 
 /******************************************************************************

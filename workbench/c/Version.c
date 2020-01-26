@@ -65,7 +65,6 @@
 #define ENABLE_RT 1
 #include <aros/rt.h>
 
-#include <string.h>
 #include <ctype.h>
 
 #include <proto/exec.h>

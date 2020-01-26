@@ -55,7 +55,6 @@
 #include <proto/exec.h>
 #include <dos/dos.h>
 #include <proto/dos.h>
-#include <string.h>
 #include <aros/shcommands.h>
 
 

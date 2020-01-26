@@ -61,6 +61,7 @@
 #include <proto/asl.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
+#include <proto/utility.h>
 
 #include <dos/dos.h>
 #include <dos/rdargs.h>
@@ -72,7 +73,6 @@
 #include <utility/tagitem.h>
 #include <workbench/startup.h>
 
-#include <string.h>
 
 #define ARG_TEMPLATE    "DRAWER,FILE/K,PATTERN/K,TITLE/K,POSITIVE/K," \
                         "NEGATIVE/K,ACCEPTPATTERN/K,REJECTPATTERN/K," \
@@ -87,7 +87,7 @@ enum { ARG_DRAWER = 0, ARG_FILE, ARG_PATTERN, ARG_TITLE, ARG_POSITIVE,
        ARG_MULTISELECT, ARG_DRAWERSONLY, ARG_NOICONS, ARG_PUBSCREEN,
        ARG_INITIALVOLUMES, TOTAL_ARGS };
 
-const TEXT version[] = "$VER: RequestFile 42.4 (3.4.2014)\n";
+const TEXT version[] = "$VER: RequestFile 42.5 (" ADATE ")\n";
 
 struct TagItem FileTags[] =
 {
@@ -113,6 +113,7 @@ struct TagItem FileTags[] =
 int __nocommandline;
 
 static UBYTE *ParsePatternArg(IPTR **args, UWORD ArgNum);
+static ULONG Strlen(CONST_STRPTR string);
 
 int main(void)
 {
@@ -163,7 +164,7 @@ int main(void)
                 {
                     if(!(IPTR)args[ARG_MULTISELECT])
                     {
-			strncpy(Buffer, FileReq->fr_Drawer, MAX_PATH_LEN);
+			Strlcpy(Buffer, FileReq->fr_Drawer, MAX_PATH_LEN);
 			
                         /* FileReq->fr_File is NULL when using DRAWERSONLY */
                         Success = AddPart(Buffer,
@@ -181,7 +182,7 @@ int main(void)
 			
                 	for (i = 0; i != FileReq->fr_NumArgs; i++)
                 	{
-			    strncpy(Buffer, FileReq->fr_Drawer, MAX_PATH_LEN);
+			    Strlcpy(Buffer, FileReq->fr_Drawer, MAX_PATH_LEN);
 
                             Success = AddPart(Buffer,
                                               WBFiles[i].wa_Name,
@@ -255,7 +256,7 @@ static UBYTE *ParsePatternArg(IPTR **args, UWORD ArgNum)
     LONG PatternBufferSize;
     STRPTR pattern = (STRPTR)args[ArgNum];
 
-    PatternBufferSize = 2 * strlen((char *)pattern);
+    PatternBufferSize = 2 * Strlen((char *)pattern);
     PatternBuffer = AllocVec(PatternBufferSize, MEMF_PUBLIC);
     if (PatternBuffer != NULL)
     {
@@ -273,4 +274,13 @@ static UBYTE *ParsePatternArg(IPTR **args, UWORD ArgNum)
     }
 
     return PatternBuffer;
+}
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
 }

@@ -61,7 +61,6 @@
 #include <exec/lists.h>
 #include <exec/nodes.h>
 #include <exec/types.h>
-#include <strings.h>
 
 #include <aros/shcommands.h>
 

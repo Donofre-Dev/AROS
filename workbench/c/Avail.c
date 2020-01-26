@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2016, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Avail CLI command
@@ -63,9 +63,8 @@
 #include <dos/dos.h>
 #include <proto/dos.h>
 #include <utility/tagitem.h>
-#include <string.h>
 
-const TEXT version[] = "$VER: Avail 42.2 (24.2.2016)\n";
+const TEXT version[] = "$VER: Avail 42.3 (" ADATE ")\n";
 
 #if (__WORDSIZE == 64)
 #define AVAIL_ARCHSTR   "%13s"
@@ -87,7 +86,8 @@ enum
     NOOFARGS
 };
 
-LONG printm(CONST_STRPTR head, IPTR *array, LONG num);
+static LONG printm(CONST_STRPTR head, IPTR *array, LONG num);
+static ULONG Strlen(CONST_STRPTR string);
 
 int __nocommandline = 1;
 
@@ -289,7 +289,7 @@ void fmtlarge(UBYTE *buf, IPTR num)
     *buf   = '\0';
 }
 
-LONG printm(CONST_STRPTR head, IPTR *array, LONG num)
+static LONG printm(CONST_STRPTR head, IPTR *array, LONG num)
 {
     LONG res = -1;
     CONST_STRPTR fmt;
@@ -297,7 +297,7 @@ LONG printm(CONST_STRPTR head, IPTR *array, LONG num)
 
     if (head)
     {
-        ULONG len = 18 - strlen(head);
+        ULONG len = 18 - Strlen(head);
         RawDoFmt(aHuman ? "%%%lds" : "%%%ldiu", (RAWARG)&len, NULL, buf);
         fmt = buf;
         PutStr(head);
@@ -352,4 +352,14 @@ LONG printm(CONST_STRPTR head, IPTR *array, LONG num)
     PutStr("\n");
 
     return res;
+}
+
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
 }

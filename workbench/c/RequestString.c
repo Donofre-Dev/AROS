@@ -66,8 +66,6 @@
 #include <proto/muimaster.h>
 #include <clib/alib_protos.h>
 
-#include <string.h>
-
 AROS_UFH3(VOID, persistfunc,
     AROS_UFPA(struct Hook *     , hook, A0),
     AROS_UFPA(Object *          , obj,  A2),

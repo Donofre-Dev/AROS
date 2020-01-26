@@ -71,8 +71,6 @@
 #include <proto/alib.h>
 #include <proto/utility.h>
 
-#include <string.h>
-
 #undef DEBUG
 #define DEBUG 0
 #include <aros/debug.h>

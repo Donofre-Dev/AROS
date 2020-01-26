@@ -66,8 +66,6 @@
 #include <proto/dos.h>
 #include <clib/alib_protos.h>
 
-#include <string.h>
-
 #define DEBUG 1
 #include <aros/debug.h>
 

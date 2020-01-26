@@ -1,6 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
-    $Id$
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
 
     Desc: Date CLI command
     Lang: English
@@ -58,10 +57,9 @@
 #include <dos/dos.h>
 #include <dos/datetime.h>
 #include <devices/timer.h>
+#include <proto/utility.h>
 
-#include <string.h>
-
-const TEXT version[] = "$VER: Date 41.4 (15.11.2011)\n";
+const TEXT version[] = "$VER: Date 41.5 (" ADATE ")\n";
 
 #define ARG_STRING "DAY,DATE,TIME,TO=VER/K"
 #define ARG_DAY 0
@@ -69,6 +67,15 @@ const TEXT version[] = "$VER: Date 41.4 (15.11.2011)\n";
 #define ARG_TIME 2
 #define ARG_VER 3
 #define ARG_COUNT 4
+
+static ULONG Strlen(CONST_STRPTR string)
+{
+    CONST_STRPTR str_start = (CONST_STRPTR)string;
+
+    while (*string++);
+
+    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
+}
 
 static WORD chrcount(STRPTR s, UBYTE c)
 {
@@ -109,12 +116,12 @@ int setdate(STRPTR *day_date_time)
             /* must be time */
             if (count == 1)
             {
-                    /* seconds are missing */
+                /* seconds are missing */
                 
-                if (strlen(day_date_time[i]) <= 5)
+                if (Strlen(day_date_time[i]) <= 5)
                 {
-                    strcpy(fulltime, day_date_time[i]);
-                    strcat(fulltime, ":00");
+                    Strlcpy(fulltime, day_date_time[i], sizeof fulltime);
+                    Strlcat(fulltime, ":00", sizeof fulltime);
                     realtime = fulltime;
                 }
                 else
@@ -228,14 +235,14 @@ int printdate(STRPTR filename)
         dt.dat_StrTime = timestring;
         DateToStr(&dt);
 
-        CopyMem(daystring, resstring, strlen(daystring));
-        pos += strlen(daystring);
+        CopyMem(daystring, resstring, Strlen(daystring));
+        pos += Strlen(daystring);
         resstring[pos++] = ' ';
-        CopyMem(datestring, resstring + pos, strlen(datestring));
-        pos += strlen(datestring);
+        CopyMem(datestring, resstring + pos, Strlen(datestring));
+        pos += Strlen(datestring);
         resstring[pos++] = ' ';
-        CopyMem(timestring, resstring + pos, strlen(timestring));
-        pos += strlen(timestring);
+        CopyMem(timestring, resstring + pos, Strlen(timestring));
+        pos += Strlen(timestring);
         resstring[pos++] = 0x0a;
 
         if(Write(file, resstring, pos) < pos)

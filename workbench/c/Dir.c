@@ -32,7 +32,7 @@
 
 #include <aros/shcommands.h>
 
-#include <string.h>
+// needed for qsort()
 #include <stdlib.h>
 
 /******************************************************************************

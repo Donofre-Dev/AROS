@@ -1,6 +1,5 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
-    $Id$
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
 
     Desc: Install CLI command
     Lang: English
@@ -55,11 +54,10 @@
 
 ******************************************************************************/
 
-#include <string.h>
-
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/alib.h>
+#include <proto/utility.h>
 
 #include <devices/newstyle.h>
 #include <devices/trackdisk.h>
@@ -77,7 +75,7 @@
 #define AROS_BSTR_ADDR(s) (((STRPTR)BADDR(s))+1)
 #endif
 
-const TEXT version[] = "$VER: Install 42.1 (19.2.2015)\n";
+const TEXT version[] = "$VER: Install 42.2 (" ADATE ")\n";
 
 struct Volume {
 	STRPTR drivename;
@@ -226,8 +224,8 @@ ULONG error=0;
 STRPTR errstr=NULL;
 
 	
-	strcpy(stagename, (char *)volume->drivename);
-	strcat(stagename, "Boot/grub/stage2");
+	Strlcpy(stagename, (char *)volume->drivename, sizeof stagename);
+	Strlcat(stagename, "Boot/grub/stage2", sizeof stagename);
 	fh = Open(stagename,MODE_OLDFILE);
 	if (fh)
 	{
@@ -257,8 +255,8 @@ STRPTR errstr=NULL;
 					{
 						if (Write(fh, stage2_firstblock, 512)==512)
 						{
-							strcpy(stagename, (char *)volume->drivename);
-							strcat(stagename, "Boot/grub/stage1");
+							Strlcpy(stagename, (char *)volume->drivename, sizeof stagename);
+							Strlcat(stagename, "Boot/grub/stage1", sizeof stagename);
 							fh2 = Open(stagename, MODE_OLDFILE);
 							if (fh2)
 							{
@@ -419,7 +417,7 @@ STRPTR errstr=NULL;
 				fssm = (struct FileSysStartupMsg *)BADDR(dn->dn_Startup);
 				if (use_mbr)
 				{
-					if (strcmp(AROS_BSTR_ADDR(fssm->fssm_Device),"ide.device")!=0)
+					if (Stricmp(AROS_BSTR_ADDR(fssm->fssm_Device),"ide.device")!=0)
 					{
 						error = ERROR_OBJECT_WRONG_TYPE;
 						errstr = AROS_BSTR_ADDR(fssm->fssm_Device);
@@ -461,7 +459,7 @@ STRPTR errstr=NULL;
 												)==0
 										)
 									{
-										if (strcmp(AROS_BSTR_ADDR(volume->fssm->fssm_Device), "trackdisk.device") == 0)
+										if (Stricmp(AROS_BSTR_ADDR(volume->fssm->fssm_Device), "trackdisk.device") == 0)
 											volume->flags |= VF_IS_TRACKDISK;
 										volume->startblock = 
 											de->de_LowCyl*

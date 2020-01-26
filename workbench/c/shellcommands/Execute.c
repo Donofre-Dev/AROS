@@ -50,7 +50,6 @@
 #include <dos/stdio.h>
 #include <proto/dos.h>
 #include <proto/alib.h>
-#include <string.h>
 
 #define DEBUG 0
 #include <aros/debug.h>

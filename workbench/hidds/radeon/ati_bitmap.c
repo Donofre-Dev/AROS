@@ -20,6 +20,8 @@
 #define DEBUG 0
 #include <aros/debug.h>
 
+#include <string.h>
+
 #define sd ((struct ati_staticdata*)SD(cl))
 
 #undef HiddPCIDeviceAttrBase

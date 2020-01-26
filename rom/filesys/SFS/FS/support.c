@@ -7,7 +7,7 @@
 #include <proto/dos.h>
 #include <proto/exec.h>
 
-#include <strings.h>
+#include <string.h>
 
 #include "sysdep.h"
 #include "blockstructure.h"

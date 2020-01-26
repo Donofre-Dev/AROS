@@ -17,6 +17,7 @@
 #include <hidd/system.h>
 
 #include <limits.h>
+#include <string.h>
 
 #include "acpibutton_intern.h"
 

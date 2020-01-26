@@ -31,6 +31,8 @@
 #define DEBUG 1
 #include <aros/debug.h>
 
+#include <string.h>
+
 #undef HiddPCIDeviceAttrBase
 #undef HiddGfxAttrBase
 #undef HiddPixFmtAttrBase

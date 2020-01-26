@@ -62,6 +62,7 @@
 
 ******************************************************************************/
 
+#define NO_INLINE_STDARG
 
 #include <proto/dos.h>
 #include <proto/exec.h>
@@ -113,7 +114,7 @@ AROS_SHA(STRPTR, ,STRING,/F,NULL))
             }
             else
             {
-                Printf("%s\n", Buffer);
+                VPrintf("%s\n", (APTR)Buffer);
             }
         }
         else
@@ -151,7 +152,12 @@ AROS_SHA(STRPTR, ,STRING,/F,NULL))
 
 		     Buffer2[VarLength] = 0;
 
-		     Printf("%-20s\t%-20s\n", AliasNode->lv_Node.ln_Name, Buffer2);
+		     IPTR printargs[] =
+		     {
+			 (IPTR)AliasNode->lv_Node.ln_Name,
+			 (IPTR)Buffer2
+		     };
+		     VPrintf("%-20s\t%-20s\n", (RAWARG)printargs);
 		}
 	    }
 	}

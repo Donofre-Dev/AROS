@@ -14,6 +14,8 @@
 
 #include <expansion_intern.h>
 
+#include <string.h>
+
 /* See rom/expansion/readexpansionrom.c for documentation */
 
 static void readexprom(APTR board, struct ExpansionRom *rom, struct ExpansionBase *ExpansionBase)

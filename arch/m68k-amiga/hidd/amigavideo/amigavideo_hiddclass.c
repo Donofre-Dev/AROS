@@ -25,6 +25,8 @@
 
 #include LC_LIBDEFS_FILE
 
+#include <string.h>
+
 #include "chipset.h"
 #include "blitter.h"
 

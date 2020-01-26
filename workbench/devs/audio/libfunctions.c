@@ -12,6 +12,8 @@
  * $Id$
  */
 
+#include <string.h>
+
 #include "audio_intern.h"
 #define DEBUG 0
 #include <aros/debug.h>

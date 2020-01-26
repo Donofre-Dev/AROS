@@ -75,6 +75,8 @@
 #define DEBUG 0
 #include <aros/debug.h>
 
+#include <string.h>
+
 /*****************************************************************************************/
 
 #define ARG_TEMPLATE    "CLIPUNIT=UNIT/N,OFF/S"

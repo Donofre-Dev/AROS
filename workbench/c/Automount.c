@@ -53,8 +53,8 @@
 #include <proto/exec.h>
 #include <proto/expansion.h>
 
-// needed for strtoul()
 #include <stdlib.h>
+#include <string.h>
 
 struct HandlerNode
 {

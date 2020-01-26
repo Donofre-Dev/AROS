@@ -27,6 +27,8 @@
 #include "workbench_intern.h"
 #include "uae_integration.h"
 
+#include <string.h>
+
 /**************************************************************************
  * get_j_uae_port
  *

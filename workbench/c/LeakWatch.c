@@ -69,6 +69,8 @@
 #define DEBUG 1
 #include <aros/debug.h>
 
+#include <string.h>
+
 const TEXT version[] = "$VER: LeakWatch 0.2 (10.03.2013)\n";
 
 static struct Library *GadToolsBase;

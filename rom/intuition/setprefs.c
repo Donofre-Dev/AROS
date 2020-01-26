@@ -13,6 +13,7 @@
 #include <prefs/pointer.h>
 
 #include <stddef.h>
+#include <string.h>
 
 /* Palette update is AROS addition. Keep while backporting. */
 static void SetColors(UWORD *p, UBYTE first, UBYTE cnt, struct IntuitionBase *IntuitionBase)

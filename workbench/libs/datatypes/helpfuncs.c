@@ -21,6 +21,8 @@
 
 #include <aros/debug.h>
 
+#include <string.h>
+
 /************************** ASCII/BINARY RECOGNITION *************************/
 
 UBYTE const ASCIITable[256]=

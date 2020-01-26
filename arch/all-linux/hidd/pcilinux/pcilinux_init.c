@@ -20,6 +20,7 @@
 #include <utility/utility.h>
 
 #include <unistd.h>
+#include <string.h>
 
 #include <proto/exec.h>
 #include <proto/kernel.h>

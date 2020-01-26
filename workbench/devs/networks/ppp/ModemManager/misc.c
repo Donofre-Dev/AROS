@@ -41,6 +41,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
 #include <aros/debug.h>
 	 
 #ifdef __AROS__
@@ -48,7 +50,6 @@
 #include <hidd/pci.h>
 #endif
 
-#include <ctype.h>
 #include <ctype.h>
 #include <devices/serial.h>
 #include <devices/timer.h>

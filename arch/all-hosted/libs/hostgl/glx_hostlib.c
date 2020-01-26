@@ -12,6 +12,8 @@
 #define DEBUG 0
 #include <aros/debug.h>
 
+#include <string.h>
+
 void *glx_handle = NULL;
 struct glx_func glx_func;
 

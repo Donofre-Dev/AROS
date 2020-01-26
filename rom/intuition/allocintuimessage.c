@@ -7,6 +7,8 @@
 #include "intuition_intern.h"
 #include <exec/exec.h>
 
+#include <string.h>
+
 /*****i***********************************************************************
 
     NAME */

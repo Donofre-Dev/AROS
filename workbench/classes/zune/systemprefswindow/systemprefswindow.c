@@ -23,6 +23,8 @@
 #include <zune/prefseditor.h>
 #include <zune/prefswindow.h>
 
+#include <string.h>
+
 #include "systemprefswindow.h"
 #include "systemprefswindow_private.h"
 

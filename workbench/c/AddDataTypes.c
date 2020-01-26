@@ -79,6 +79,8 @@
 #include <proto/alib.h>
 #include <proto/arossupport.h>
 
+#include <string.h>
+
 #include "../libs/datatypes/datatypes_intern.h"
 #undef DOSBase
 #undef UtilityBase

@@ -15,7 +15,7 @@
 #include <libraries/mui.h>
 #include <cybergraphx/cybergraphics.h>
 
-#include <strings.h>
+#include <string.h>
 #include <bzlib.h>
 
 #include "pixmap.h"

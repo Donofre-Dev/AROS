@@ -7,7 +7,7 @@
 #include <dos/dos.h>
 
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
 
 /*
     Test output using various float printing formats.

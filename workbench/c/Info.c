@@ -86,6 +86,8 @@
 #include <proto/locale.h>
 #include <proto/alib.h>
 
+#include <string.h>
+
 /* Prototypes */
 
 ULONG ComputeKBytes(ULONG a, ULONG b);

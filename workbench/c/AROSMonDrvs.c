@@ -60,6 +60,8 @@
 
 #include <aros/shcommands.h>
 
+#include <string.h>
+
 #define MONITORS_DIR     "DEVS:Monitors"
 #define COMPOSITING_NAME "Compositor"
 

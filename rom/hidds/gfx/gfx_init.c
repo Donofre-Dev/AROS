@@ -11,6 +11,8 @@
 #define __OOP_NOMETHODBASES__
 
 #include <stddef.h>
+#include <string.h>
+
 #include <exec/types.h>
 
 #include <proto/exec.h>

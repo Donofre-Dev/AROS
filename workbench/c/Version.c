@@ -66,6 +66,7 @@
 #include <aros/rt.h>
 
 #include <ctype.h>
+#include <string.h>
 
 #include <proto/exec.h>
 #include <proto/utility.h>

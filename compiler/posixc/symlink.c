@@ -8,8 +8,10 @@
 #include <aros/debug.h>
 
 #include <stdlib.h>
+#include <string.h>
 #include <proto/dos.h>
 #include <errno.h>
+
 #include "__upath.h"
 
 /*****************************************************************************

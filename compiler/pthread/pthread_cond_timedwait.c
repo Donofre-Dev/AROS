@@ -20,6 +20,8 @@
 
 #include <proto/timer.h>
 
+#include <string.h>
+
 #include "pthread_intern.h"
 #include "debug.h"
 

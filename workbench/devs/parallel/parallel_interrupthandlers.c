@@ -11,6 +11,9 @@
 #include <exec/types.h>
 #include <exec/interrupts.h>
 #include <hidd/parallel.h>
+
+#include <string.h>
+
 #include "parallel_intern.h"
 
 #include <aros/debug.h>

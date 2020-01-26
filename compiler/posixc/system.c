@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <string.h>
 
 #include "__fdesc.h"
 #include "__upath.h"

@@ -16,6 +16,8 @@
 #include <dos/notify.h>
 #include <proto/exec.h>
 
+#include <string.h>
+
 #include "ntfs_fs.h"
 #include "ntfs_protos.h"
 

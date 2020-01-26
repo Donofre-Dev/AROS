@@ -7,6 +7,15 @@
 */
 
 #include <aros/asmcall.h>
+
+/*
+ * TODO
+ * after removing "#include <string.h>" from aros/debug.h compiling of this
+ * source failed because of missing SS_ONSTACK. So we include string.h here.
+ * This contradicts the comment below!
+ */
+#include <string.h>
+
 #include <aros/debug.h>
 #include <exec/tasks.h>
 #include <proto/exec.h>

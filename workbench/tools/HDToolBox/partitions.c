@@ -14,7 +14,7 @@
 #include <utility/tagitem.h>
 
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
 
 #include "partitions.h"
 #include "hdtoolbox_support.h"

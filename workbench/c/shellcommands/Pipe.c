@@ -73,6 +73,8 @@
 #include <proto/dos.h>
 #include <aros/shcommands.h>
 
+#include <string.h>
+
 static inline STRPTR NextToken(STRPTR *pstr, CONST_STRPTR tok)
 {
     STRPTR str, ostr = *pstr;

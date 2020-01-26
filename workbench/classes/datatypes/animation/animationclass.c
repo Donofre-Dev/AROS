@@ -35,6 +35,8 @@
 
 #include <gadgets/tapedeck.h>
 
+#include <string.h>
+
 #include "animationclass.h"
 
 #include <stdio.h>

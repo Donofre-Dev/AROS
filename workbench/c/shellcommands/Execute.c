@@ -59,6 +59,8 @@
 #endif
 #include <aros/shcommands.h>
 
+#include <string.h>
+
 AROS_SH2(Execute, 41.1,
 AROS_SHA(STRPTR, ,NAME     , /A, NULL),
 AROS_SHA(STRPTR, ,ARGUMENTS, /F, NULL))

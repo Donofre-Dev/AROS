@@ -8,6 +8,8 @@
 #include <proto/dos.h>
 #include <proto/exec.h>
 
+#include <string.h>
+
 #include "Shell.h"
 
 #include <aros/debug.h>

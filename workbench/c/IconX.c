@@ -66,6 +66,8 @@
 
 #include <workbench/startup.h>
 
+#include <string.h>
+
 /* some default values */
 #define DEFWINDOW "con:0/50//120/IconX/AUTO/WAIT/CLOSE"
 #define DEFSTACK  (40960)

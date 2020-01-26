@@ -19,8 +19,6 @@
 #   include <exec/alerts.h>
 #endif
 
-#include <string.h>
-
 #ifndef DEBUG
 #   define DEBUG 0
 #endif

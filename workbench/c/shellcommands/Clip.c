@@ -1,5 +1,5 @@
 /*
-    Copyright © 2011, The AROS Development Team. All rights reserved.
+    Copyright © 2020, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc:
@@ -35,6 +35,8 @@
 
 ******************************************************************************/
 
+#define NO_INLINE_STDARG
+
 #include <datatypes/textclass.h>
 
 #include <proto/exec.h>
@@ -62,7 +64,7 @@
 BOOL   toClip(STRPTR text, UBYTE clipUnit, struct Library *IFFParseBase);
 STRPTR fromClip(UBYTE clipUnit, struct Library *IFFParseBase);
 
-AROS_SH6H(Clip,50.1, "read from or write to clipboard\n",
+AROS_SH6H(Clip,50.2, "read from or write to clipboard\n",
 AROS_SHAH(LONG *,U=   ,UNIT,/N/K,NULL ,  "Clipboard unit to be used by GET or SET (default = 0)\n"
                                      "\t\tUNIT must be between 0 and 255"),
 AROS_SHAH(BOOL  ,W=   ,WAIT  ,/S,FALSE,  "Make GET wait for the UNIT to be filled with text data"),
@@ -170,7 +172,7 @@ AROS_SHAH(STRPTR,     ,TEXT  ,  ,NULL ,"\tText data to be SET in the UNIT, requi
             /* There must be a better way??? */
             if (SHArg(COUNT))
             {
-                UBYTE count = 0;
+                UWORD count = 0;
                 BPTR  handle;
                 unit = PRIMARY_CLIP;
                 do
@@ -183,7 +185,7 @@ AROS_SHAH(STRPTR,     ,TEXT  ,  ,NULL ,"\tText data to be SET in the UNIT, requi
                             Close(handle);
                     }
                 } while (unit++ < 255);
-                Printf((STRPTR)"%d\n", count);
+                VPrintf((STRPTR)"%d\n", (APTR)&count);
                 rc = RETURN_OK;
             }
         } /* if (!(SHArg(WAIT) && (rc != RETURN_OK))) */

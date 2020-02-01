@@ -55,6 +55,8 @@
 
 ******************************************************************************//*****************************************************************************************/
 
+#define NO_INLINE_STDARG
+
 #include <aros/asmcall.h>
 #include <dos/dos.h>
 #include <intuition/intuition.h>
@@ -89,7 +91,7 @@
 #define CODE_COPY       'C'
 #define CODE_PASTE      'V'
 
-const TEXT version[] = "$VER: Conclip 42.2 (27.5.2018)\n";
+const TEXT version[] = "$VER: Conclip 42.3 (" ADATE ")\n";
 
 struct MyEditHookMsg
 {
@@ -116,7 +118,7 @@ static UBYTE            s[256];
 
 static void cleanup(STRPTR msg)
 {
-    if (msg) Printf("ConClip: %s\n", msg);
+    if (msg) VPrintf("ConClip: %s\n", (RAWARG)&msg);
 
     if (oldedithook) SetEditHook(oldedithook);
     if (progport) DeletePort(progport);

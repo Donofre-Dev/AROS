@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2019, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: 
@@ -55,6 +55,8 @@
 
 ******************************************************************************/
 
+#define NO_INLINE_STDARG
+
 #define DEBUG 0
 #include <aros/debug.h>
 
@@ -79,7 +81,7 @@
 #include <proto/alib.h>
 #include <proto/arossupport.h>
 
-#include <string.h>
+#include <aros/inline_stdc.h>
 
 #include "../libs/datatypes/datatypes_intern.h"
 #undef DOSBase
@@ -167,7 +169,7 @@ AROS_UFP3(void, AROS_SLIB_ENTRY(FreeFunc, AddDataTypes, 0),
 
 /********************************* CONSTANTS *********************************/
 
-const TEXT Version[] = "$VER: AddDataTypes 42.2 (20.02.2019)\n";
+const TEXT Version[] = "$VER: AddDataTypes 42.3 (" ADATE ")\n";
 
 #define EXCL_LEN 18
 UBYTE ExcludePattern[] = "#?.(info|dbg|backdrop|ppc|arm|i386|x86_64)";
@@ -261,7 +263,7 @@ int main(void)
     struct StackVars *sv;
     int    result = RETURN_FAIL;
 
-    memset(&vars, 0, sizeof(struct StackVars));
+    SetMem(&vars, 0, sizeof(struct StackVars));
     sv = &vars;
 
     if((DTList = CreateDTList(sv)))
@@ -341,7 +343,12 @@ int main(void)
                                 cdt=(struct CompoundDataType *)(node-1);
                                 dth=cdt->DT.dtn_Header;
 
-                                Printf("%s, \"%s\"\n", dth->dth_BaseName, dth->dth_Name);
+                                IPTR printargs[] =
+                                {
+                                    (IPTR)dth->dth_BaseName,
+                                    (IPTR)dth->dth_Name
+                                };
+                                VPrintf("%s, \"%s\"\n", (RAWARG)printargs);
                                 node = node->ln_Succ;
                             }
                         }
@@ -616,13 +623,14 @@ struct CompoundDataType *CreateBasicType(struct StackVars *sv,
                                          UWORD Flags, ULONG ID, ULONG GroupID)
 {
     struct CompoundDataType *cdt;
-    ULONG AllocLen = sizeof(struct CompoundDataType) + strlen(name) + 1;
+    ULONG SLen = Strlen(name);
+    ULONG AllocLen = sizeof(struct CompoundDataType) + SLen + 1;
     
     if((cdt = AllocVec(AllocLen, MEMF_PUBLIC | MEMF_CLEAR)))
     {
         cdt->DT.dtn_Header = &cdt->DTH;
         
-        strcpy((UBYTE*)(cdt + 1), name);
+        Strlcpy((UBYTE*)(cdt + 1), name, SLen + 1);
         
         cdt->DTH.dth_Name=
             cdt->DTH.dth_BaseName=
@@ -975,7 +983,7 @@ struct CompoundDataType *AddDataType(struct StackVars *sv,
         Success = TRUE;
         
         if((!Stricmp(cdt->DTH.dth_Pattern, "#?")) || 
-           (!strlen(cdt->DTH.dth_Pattern)) )
+           (!Strlen(cdt->DTH.dth_Pattern)) )
         {
             cdt->FlagLong |= CFLGF_PATTERN_UNUSED;
         }
@@ -983,7 +991,7 @@ struct CompoundDataType *AddDataType(struct StackVars *sv,
         {
             cdt->FlagLong &= ~(CFLGF_PATTERN_UNUSED);
             
-            AllocSize = 2*strlen(cdt->DTH.dth_Pattern) + 2;
+            AllocSize = 2*Strlen(cdt->DTH.dth_Pattern) + 2;
 
             if(!(cdt->ParsePatMem = AllocVec(AllocSize,
                                              MEMF_PUBLIC | MEMF_CLEAR)))

@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -40,6 +40,8 @@
 
 ******************************************************************************/
 
+#define NO_INLINE_STDARG
+
 #include <aros/debug.h>
 #include <dos/dos.h>
 #include <dos/rdargs.h>
@@ -55,6 +57,8 @@
 
 #include <stdlib.h>
 #include <string.h>
+
+const TEXT version[] = "$VER: Automount 40.0 (" ADATE ")\n";
 
 struct HandlerNode
 {
@@ -110,7 +114,7 @@ LONG parsePrefs(char *buffer, LONG size)
 
                 if (!*p)
                 {
-                    Printf("LINE %ld: Mailformed filesystem ID\n", line);
+                    VPrintf("LINE %d: Mailformed filesystem ID\n", (RAWARG)&line);
                     return -1;
                 }
 
@@ -132,7 +136,7 @@ LONG parsePrefs(char *buffer, LONG size)
             break;
 
         default:
-            Printf("LINE %ld: Missing filesystem ID\n", line);
+            VPrintf("LINE %d: Missing filesystem ID\n", (RAWARG)&line);
             return -1;
         }
 
@@ -142,7 +146,7 @@ LONG parsePrefs(char *buffer, LONG size)
 
         if (res != ITEM_EQUAL)
         {
-            Printf("LINE %ld: Unexpected item after filesystem ID\n", line);
+            VPrintf("LINE %ld: Unexpected item after filesystem ID\n", (RAWARG)&line);
             return -1;
         }
 
@@ -152,7 +156,7 @@ LONG parsePrefs(char *buffer, LONG size)
 
         if ((res != ITEM_QUOTED) && (res != ITEM_UNQUOTED))
         {
-            Printf("LINE %ld: Missing handler name\n", line);
+            VPrintf("LINE %ld: Missing handler name\n", (RAWARG)&line);
             return -1;
         }
 
@@ -296,7 +300,12 @@ int main(void)
 
                         if (hn)
                         {
-                            Printf("Mounting %b with %s\n", dn->dn_Name, hn->handler);
+                            IPTR printargs[] =
+                            {
+                                (IPTR)dn->dn_Name,
+                                (IPTR)hn->handler
+                            };
+                            VPrintf("Mounting %b with %s\n", (RAWARG)printargs);
 
                             dn->dn_Handler = CreateBSTR(hn->handler);
                             if (!dn->dn_Handler)

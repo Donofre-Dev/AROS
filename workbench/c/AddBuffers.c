@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2014, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: AddBuffers CLI command
@@ -53,11 +53,13 @@
 
 ******************************************************************************/
 
+#define NO_INLINE_STDARG
+
 #include <proto/dos.h>
 #include <dos/dos.h>
 
 
-const TEXT version[] = "$VER: AddBuffers 41.2 (2.4.2014)\n";
+const TEXT version[] = "$VER: AddBuffers 41.3 (" ADATE ")\n";
 
 #define ARG_TEMPLATE "DRIVE/A,BUFFERS/N"
 
@@ -94,7 +96,12 @@ int main(void)
 
 	if(AddBuffers(drive, buffers))
 	{
-	    Printf("%s has %ld buffers\n", drive, IoErr());
+	    IPTR printargs[] =
+	    {
+		(IPTR)drive,
+		IoErr()
+	    };
+	    VPrintf("%s has %ld buffers\n", (RAWARG)printargs);
 	}
 	else
 	{

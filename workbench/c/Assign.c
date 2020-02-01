@@ -261,7 +261,7 @@ static int Main(struct ExecBase *sBase)
 				    pos = Strchr(MyArgList->name, ':');
 				    if (!pos || pos[1])
 				    {
-					    VPrintf("Invalid device name %s\n", (RAWARG)MyArgList->name);
+					    VPrintf("Invalid device name %s\n", (RAWARG)&MyArgList->name);
 					    FreeArgs(readarg);
 					    CloseLibrary((struct Library *) DOSBase);
 					    return RETURN_FAIL;

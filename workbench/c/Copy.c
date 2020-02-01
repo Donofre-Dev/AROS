@@ -296,6 +296,7 @@
 #define USE_SOFTLINKCHECK               1
 #define USE_ALWAYSVERBOSE               1
 #define USE_BOGUSEOFWORKAROUND          0
+#define NO_INLINE_STDARG
 
 #include <aros/asmcall.h>
 #include <exec/devices.h>
@@ -316,7 +317,7 @@ typedef ULONG IPTR;
 
 #include <string.h>
 
-const TEXT version[] = "\0$VER: Copy 50.17 (30.12.2011)";
+const TEXT version[] = "\0$VER: Copy 50.18 (" ADATE ")";
 
 static const UBYTE *PARAM =
 "FROM/M,TO,PAT=PATTERN/K,BUF=BUFFER/K/N,ALL/S,"
@@ -1374,8 +1375,12 @@ void PatCopy(STRPTR name, struct CopyData *cd)
 
                                 if (!link_ok)
                                 {
-                                    Printf("Warning: Skipping dangling softlink %s -> %s\n",
-                                               APath->ap_Info.fib_FileName, buffer);
+                                    IPTR printargs[] =
+                                    {
+                                        (IPTR)APath->ap_Info.fib_FileName,
+                                        (IPTR)buffer
+                                    };
+                                    VPrintf("Warning: Skipping dangling softlink %s -> %s\n", (RAWARG)printargs);
                                 }
                             }
                             FreeDeviceProc(dvp);
@@ -1409,7 +1414,7 @@ void PatCopy(STRPTR name, struct CopyData *cd)
 #if USE_ALWAYSVERBOSE
             cd->Flags |= COPYFLAG_VERBOSE;
 #endif
-            Printf("%s - ", APath->ap_Info.fib_FileName);
+            VPrintf("%s - ", (RAWARG)&APath->ap_Info.fib_FileName);
             PrintFault(ioerr, NULL);
             cd->IoErr = ioerr;
 
@@ -1543,7 +1548,7 @@ BPTR OpenDestDir(STRPTR name, struct CopyData *cd)
                 if ((cd->Flags & COPYFLAG_VERBOSE))
                 {
                     PrintName(name, 1, 1, 1, cd);
-                    Printf("%s\n", TEXT_CREATED);
+                    VPrintf("%s\n", (RAWARG)&TEXT_CREATED);
                 }
 
                 UnLock(dir);
@@ -1623,7 +1628,7 @@ void PrintName(CONST_STRPTR name, ULONG deep, ULONG dir, ULONG txt, struct CopyD
     }
 #endif
 
-    Printf((dir ? TEXT_DIRECTORY : (STRPTR) "%s"), name);
+    VPrintf((dir ? TEXT_DIRECTORY : (STRPTR) "%s"), (RAWARG)&name);
 
     if (!dir && txt)
     {
@@ -1643,7 +1648,7 @@ void PrintNotDone(CONST_STRPTR name, CONST_STRPTR txt, ULONG deep, ULONG dir, st
     }
 #endif
 
-    Printf(TEXT_NOT_DONE, txt);
+    VPrintf(TEXT_NOT_DONE, (RAWARG)&txt);
     if (cd->IoErr != 0)
     {
         PutStr(" - ");
@@ -1780,7 +1785,7 @@ void DoWork(STRPTR name, struct CopyData *cd)
 
             if ((cd->Flags & COPYFLAG_VERBOSE))
             {
-                Printf("%s\n", txt);
+                VPrintf("%s\n", (RAWARG)&txt);
             }
         }
 
@@ -1815,9 +1820,9 @@ void DoWork(STRPTR name, struct CopyData *cd)
         {
             if (!(cd->Flags & COPYFLAG_QUIET))
             {
-                Printf(" %s ", cd->FileName);
-                Printf(TEXT_NOT_DONE, TEXT_DELETED);
-                Printf("%s\n", TEXT_ERR_DELETE_DEVICE);
+                VPrintf(" %s ", (RAWARG)&cd->FileName);
+                VPrintf(TEXT_NOT_DONE, (RAWARG)&TEXT_DELETED);
+                VPrintf("%s\n", (RAWARG)&TEXT_ERR_DELETE_DEVICE);
             }
         }
 
@@ -1878,7 +1883,7 @@ void DoWork(STRPTR name, struct CopyData *cd)
                     PrintName(name, cd->Deep, 1, 1, cd);
                 }
 
-                Printf(TEXT_NOT_DONE, TEXT_ENTERED);
+                VPrintf(TEXT_NOT_DONE, (RAWARG)&TEXT_ENTERED);
                 PutStr(TEXT_ERR_INFINITE_LOOP);
             }
         }
@@ -1969,7 +1974,7 @@ void DoWork(STRPTR name, struct CopyData *cd)
                         PrintName(name, cd->Deep, 1, 1, cd);
                     }
 
-                    Printf(TEXT_NOT_DONE, TEXT_LINKED);
+                    VPrintf(TEXT_NOT_DONE, (RAWARG)&TEXT_LINKED);
                     PutStr(TEXT_ERR_FORCELINK);
                 }
             }
@@ -2102,7 +2107,7 @@ void DoWork(STRPTR name, struct CopyData *cd)
         {
             if ((cd->Flags & COPYFLAG_VERBOSE))
             {
-                Printf("%s\n", printok);
+                VPrintf("%s\n", (RAWARG)&printok);
             }
         }
 

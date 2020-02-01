@@ -64,6 +64,8 @@
 #include <proto/dos.h>
 #include <utility/tagitem.h>
 
+#include <aros/inline_stdc.h>
+
 const TEXT version[] = "$VER: Avail 42.3 (" ADATE ")\n";
 
 #if (__WORDSIZE == 64)
@@ -87,7 +89,6 @@ enum
 };
 
 static LONG printm(CONST_STRPTR head, IPTR *array, LONG num);
-static ULONG Strlen(CONST_STRPTR string);
 
 int __nocommandline = 1;
 
@@ -352,14 +353,4 @@ static LONG printm(CONST_STRPTR head, IPTR *array, LONG num)
     PutStr("\n");
 
     return res;
-}
-
-
-static ULONG Strlen(CONST_STRPTR string)
-{
-    CONST_STRPTR str_start = (CONST_STRPTR)string;
-
-    while (*string++);
-
-    return (ULONG)(((IPTR)string) - ((IPTR)str_start)) - 1;
 }

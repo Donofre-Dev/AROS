@@ -58,6 +58,7 @@
 ******************************************************************************/
 
 #define __NOLIBBASE__
+#define NO_INLINE_STDARG
 
 #include <aros/debug.h>
 
@@ -251,7 +252,7 @@ static LONG BindDriver(STRPTR name, UWORD mfg, UBYTE prod, UBYTE *prodstr, UBYTE
 }
 
 
-AROS_SH3(BindDrivers, 41.1,
+AROS_SH3(BindDrivers, 41.2,
 AROS_SHA(BOOL, ,DRIVERS,/S, FALSE),
 AROS_SHA(BOOL, ,DEVICES,/S, FALSE),
 AROS_SHA(STRPTR, ,DIR,/K, "SYS:Expansion"))
@@ -282,13 +283,15 @@ AROS_SHA(STRPTR, ,DIR,/K, "SYS:Expansion"))
         ObtainConfigBinding();
         while ((cdev = FindConfigDev(cdev, -1, -1))) {
             struct Node *node = cdev->cd_Driver;
-            Printf("%5ld/%-3ld %08lx-%08lx %s\n",
-                    cdev->cd_Rom.er_Manufacturer,
-                    cdev->cd_Rom.er_Product,
-                    (ULONG)(IPTR)cdev->cd_BoardAddr,
-                    (ULONG)(IPTR)cdev->cd_BoardAddr+cdev->cd_BoardSize-1,
-                    (cdev->cd_Flags & CDF_CONFIGME) ?
-                     "(unbound)" : (const char *)node->ln_Name);
+            IPTR printargs[] = 
+            {
+                cdev->cd_Rom.er_Manufacturer,
+                cdev->cd_Rom.er_Product,
+                (IPTR)cdev->cd_BoardAddr,
+                (IPTR)cdev->cd_BoardAddr+cdev->cd_BoardSize-1,
+                (cdev->cd_Flags & CDF_CONFIGME) ? (IPTR)"(unbound)" : (IPTR)node->ln_Name
+            };
+            VPrintf("%5ld/%-3ld %08lx-%08lx %s\n", (RAWARG)printargs);
         }
         ReleaseConfigBinding();
         CloseLibrary(IconBase);
@@ -301,7 +304,7 @@ AROS_SHA(STRPTR, ,DIR,/K, "SYS:Expansion"))
     lock = Lock(SHArg(DIR), SHARED_LOCK);
     if (lock == BNULL) {
         error = IoErr();
-        Printf("BindDrivers: Can't open %s\n", SHArg(DIR));
+        VPrintf("BindDrivers: Can't open %s\n", (RAWARG)&SHArg(DIR));
         CloseLibrary(IconBase);
         CloseLibrary(ExpansionBase);
         SetIoErr(error);
@@ -334,7 +337,13 @@ AROS_SHA(STRPTR, ,DIR,/K, "SYS:Expansion"))
             /* If SHArg(DRIVERS) is true, just list the drivers
              */
             if (SHArg(DRIVERS)) {
-                Printf("%5ld/%-3ld %s\n", (ULONG)node->bd_Product[i].mfg, (ULONG)node->bd_Product[i].prod, node->bd_Node.ln_Name);
+                IPTR printargs[] =
+                {
+                    node->bd_Product[i].mfg,
+                    node->bd_Product[i].prod,
+                    (IPTR)node->bd_Node.ln_Name
+                };
+                VPrintf("%5ld/%-3ld %s\n", (RAWARG)printargs);
             } else {
                 LONG err;
                 err = BindDriver(node->bd_Node.ln_Name, node->bd_Product[i].mfg, node->bd_Product[i].prod, node->bd_ProductString, node->bd_Icon->do_ToolTypes, ExpansionBase, DOSBase, SysBase);

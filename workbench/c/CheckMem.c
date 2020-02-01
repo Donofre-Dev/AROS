@@ -1,3 +1,9 @@
+/*
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
+
+    Desc: CheckMem CLI command
+*/
+
 /******************************************************************************
 
 
@@ -37,6 +43,8 @@
 
 #include <exec/memory.h>
 #include <proto/exec.h>
+
+const TEXT version[] = "$VER: CheckMem 40.0 (" ADATE ")\n";
 
 int main(void)
 {

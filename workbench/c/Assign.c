@@ -11,6 +11,8 @@
 
 #define AROS_ALMOST_COMPATIBLE
 
+#define NO_INLINE_STDARG
+
 #include <proto/exec.h>
 #include <proto/utility.h>
 #include <proto/dos.h>
@@ -32,7 +34,7 @@
 #include <dos/exall.h>
 #include <utility/tagitem.h>
 
-#include <string.h>
+#include <aros/inline_stdc.h>
 
 #define	DEBUG_ASSIGN(x)
 
@@ -133,7 +135,7 @@ struct UtilityBase *UtilityBase;
 #define AROS_ASMSYMNAME(s) (&s)
 
 static const int __abox__ = 1;
-static const char version[] = "\0$VER: Assign unofficial 50.12 (20.01.2020) © AROS" ;
+static const char version[] = "\0$VER: Assign unofficial 50.13 (" ADATE ") © AROS" ;
 #else
 static const char version[] __attribute__((used)) = "\0$VER: Assign 50.12 (20.01.2020) © AROS" ;
 #endif
@@ -256,10 +258,10 @@ static int Main(struct ExecBase *sBase)
 				     * should end with a colon at the same time as no other colon may be
 				     * in the name.
 				     */
-				    pos = strchr(MyArgList->name, ':');
+				    pos = Strchr(MyArgList->name, ':');
 				    if (!pos || pos[1])
 				    {
-					    Printf("Invalid device name %s\n", (IPTR)MyArgList->name);
+					    VPrintf("Invalid device name %s\n", (RAWARG)MyArgList->name);
 					    FreeArgs(readarg);
 					    CloseLibrary((struct Library *) DOSBase);
 					    return RETURN_FAIL;
@@ -495,7 +497,7 @@ int doAssign(struct localdata *ld, STRPTR name, STRPTR *target, BOOL dismount, B
 		}
 	}
 
-	colon = strchr(name, ':');
+	colon = Strchr(name, ':');
 
 	*colon = '\0';	      /* Remove trailing colon; name[] is changed! */
 
@@ -563,7 +565,7 @@ int doAssign(struct localdata *ld, STRPTR name, STRPTR *target, BOOL dismount, B
 
 				if (!lock)
 				{
-					Printf("Can't find %s\n", (IPTR)target[i]);
+					VPrintf("Can't find %s\n", (RAWARG)&target[i]);
 					return RETURN_FAIL;
 				}
 			}
@@ -572,7 +574,12 @@ int doAssign(struct localdata *ld, STRPTR name, STRPTR *target, BOOL dismount, B
 			{
 				if (!RemAssignList(name, lock))
 				{
-					Printf("Can't subtract %s from %s\n", (IPTR)target[i], (IPTR)name);
+                    IPTR printargs[] =
+                    {
+                        (IPTR)target[i],
+                        (IPTR)name
+                    };
+					VPrintf("Can't subtract %s from %s\n", (RAWARG)printargs);
 					error = RETURN_FAIL;
 				}
 				UnLock(lock);
@@ -628,7 +635,12 @@ int doAssign(struct localdata *ld, STRPTR name, STRPTR *target, BOOL dismount, B
 
 					if (error && ioerr != ERROR_OBJECT_EXISTS)
 					{
-						Printf("Can't add %s to %s\n", (IPTR)target[i], (IPTR)name);
+                        IPTR printargs[] =
+                        {
+                            (IPTR)target[i],
+                            (IPTR)name
+                        };
+						VPrintf("Can't add %s to %s\n", (RAWARG)printargs);
 					}
 				}
 			}
@@ -673,7 +685,12 @@ int doAssign(struct localdata *ld, STRPTR name, STRPTR *target, BOOL dismount, B
 	{
 		if (ioerr == ERROR_OBJECT_EXISTS)
 		{
-			Printf("Can't %s %s\n", (IPTR)(cancel ? "cancel" : "assign"), (IPTR)name);
+            IPTR printargs[] =
+            {
+                (IPTR)(cancel ? "cancel" : "assign"),
+                (IPTR)name
+            };
+			VPrintf("Can't %s %s\n", (RAWARG)printargs);
 		}
 		else
 		{
@@ -711,7 +728,7 @@ int checkAssign(struct localdata *ld, STRPTR name)
 	if (!name)
 		name = "";
 
-	colon = strchr(name, ':');
+	colon = Strchr(name, ':');
 	if (colon)
 	{
 		*colon = '\0';

@@ -146,7 +146,7 @@ LONG parsePrefs(char *buffer, LONG size)
 
         if (res != ITEM_EQUAL)
         {
-            VPrintf("LINE %ld: Unexpected item after filesystem ID\n", (RAWARG)&line);
+            VPrintf("LINE %d: Unexpected item after filesystem ID\n", (RAWARG)&line);
             return -1;
         }
 
@@ -156,7 +156,7 @@ LONG parsePrefs(char *buffer, LONG size)
 
         if ((res != ITEM_QUOTED) && (res != ITEM_UNQUOTED))
         {
-            VPrintf("LINE %ld: Missing handler name\n", (RAWARG)&line);
+            VPrintf("LINE %d: Missing handler name\n", (RAWARG)&line);
             return -1;
         }
 

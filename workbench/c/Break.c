@@ -61,6 +61,8 @@
 
 ******************************************************************************/
 
+#define NO_INLINE_STDARG
+
 #include <exec/types.h>
 #include <exec/tasks.h>
 #include <dos/dos.h>
@@ -81,7 +83,7 @@
 #define ARG_ALL         7
 #define TOTAL_ARGS      8
 
-const TEXT version[] = "$VER: Break 42.1 (8.12.2007)";
+const TEXT version[] = "$VER: Break 42.2 (" ADATE ")";
 
 static const char exthelp[] =
         "Break: Send break signal(s) to a CLI process\n"
@@ -172,11 +174,11 @@ main(void)
 				}
 				else if (args[ARG_PORT])
 				{
-					FPrintf(errStream, "Break: Port \"%s\" does not exist.\n", (LONG) args[ARG_PORT]);
+					VFPrintf(errStream, "Break: Port \"%s\" does not exist.\n", (RAWARG)&args[ARG_PORT]);
 				}
 				else if (args[ARG_NAME])
 				{
-					FPrintf(errStream, "Break: Task \"%s\" does not exist.\n", (LONG) args[ARG_NAME]);
+					VFPrintf(errStream, "Break: Task \"%s\" does not exist.\n", (RAWARG)&args[ARG_NAME]);
 				}
 				else
 				{

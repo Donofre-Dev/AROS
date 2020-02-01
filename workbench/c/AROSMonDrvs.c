@@ -50,6 +50,8 @@
 
 #define DEBUG 0
 
+#define NO_INLINE_STDARG
+
 #include <aros/debug.h>
 #include <dos/dosextens.h>
 #include <workbench/icon.h>
@@ -57,10 +59,11 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/icon.h>
+#include <proto/utility.h>
 
 #include <aros/shcommands.h>
 
-#include <string.h>
+#include <aros/inline_stdc.h>
 
 #define MONITORS_DIR     "DEVS:Monitors"
 #define COMPOSITING_NAME "Compositor"
@@ -122,9 +125,10 @@ static BOOL findMonitors(struct List *monitorsList, struct DosLibrary *DOSBase, 
 	    DB2(bug("[LoadMonDrvs] Found monitor name %s\n", ap->ap_Info.fib_FileName));
 
 	    /* Software composition driver was loaded before */
-	    if (strcmp(ap->ap_Info.fib_FileName, COMPOSITING_NAME))
+	    if (Strcmp(ap->ap_Info.fib_FileName, COMPOSITING_NAME))
 	    {
-	    	newnode = AllocPooled(poolmem, sizeof(struct MonitorNode) + strlen(ap->ap_Info.fib_FileName));
+		ULONG slen = Strlen(ap->ap_Info.fib_FileName);
+	    	newnode = AllocPooled(poolmem, sizeof(struct MonitorNode) + slen);
 	    	DB2(bug("[LoadMonDrvs] Monitor node 0x%p\n", newnode));
 	    	if (newnode == NULL)
 	    	{
@@ -132,7 +136,7 @@ static BOOL findMonitors(struct List *monitorsList, struct DosLibrary *DOSBase, 
 		    break;
 	    	}
 
-	    	strcpy(newnode->Name, ap->ap_Info.fib_FileName);
+	    	Strlcpy(newnode->Name, ap->ap_Info.fib_FileName, slen + 1);
 	    	if (IconBase)
 	            newnode->n.ln_Pri = checkIcon(ap->ap_Info.fib_FileName, IconBase);
 	    	else
@@ -174,7 +178,7 @@ static void loadMonitors(struct List *monitorsList, struct DosLibrary *DOSBase,
     D(bug("--------------------------\n"));
 }
 
-AROS_SH2H(AROSMonDrvs, 1.1, "Load AROS Monitor and Compositor drivers",
+AROS_SH2H(AROSMonDrvs, 1.2, "Load AROS Monitor and Compositor drivers",
         AROS_SHAH(BOOL, , NOCOMPOSITION,/S,FALSE, "Only load Monitors"),
         AROS_SHAH(BOOL, , ONLYCOMPOSITION,/S,FALSE, "Only load Compositor"))
 {

@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2020, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Copy file to parallel.device
@@ -42,6 +42,9 @@
     INTERNALS
 
 ******************************************************************************/
+
+#define NO_INLINE_STDARG
+
 #include <exec/io.h>
 #include <dos/dos.h>
 #include <devices/parallel.h>
@@ -60,6 +63,8 @@
 
 /****************************************************************************************/
 
+const TEXT version[] = "$VER: CopyToPar 40.0 (" ADATE ")\n";
+
 struct MsgPort  *ParMP;
 struct IOStdReq *ParIO;
 BOOL             ParOpen;
@@ -76,7 +81,7 @@ static void cleanup(char *msg)
 {
     if (msg && !args[ARG_QUIET]) 
     {
-        Printf("CopyToPAR: %s\n", msg);
+        VPrintf("CopyToPAR: %s\n", (RAWARG)&msg);
     }
     
     if (fh) Close(fh);
@@ -186,6 +191,8 @@ static ULONG docopy(void)
 }
 
 /****************************************************************************************/
+
+int __nocommandline = 1;
 
 int main(void)
 {

@@ -60,6 +60,8 @@
 
 ******************************************************************************/
 
+#define NO_INLINE_STDARG
+
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/utility.h>
@@ -229,7 +231,7 @@ static int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
 		MatchEnd(ap);
 		UnLockDosList(LDF_ALL | LDF_READ);
 		
-		Printf("%s is a device and cannot be deleted\n", files[i]);
+		VPrintf("%s is a device and cannot be deleted\n", (RAWARG)&files[i]);
 		
 		return RETURN_FAIL;
 	    }
@@ -256,7 +258,8 @@ static int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
                 if (!DeleteFile(name))
                 {
                     LONG ioerr = IoErr();
-                    Printf("%s  Not Deleted", (IPTR)name);
+		    IPTR printarg = (IPTR)name; // because name is an array
+                    VPrintf("%s  Not Deleted", (RAWARG)&printarg);
                     PrintFault(ioerr, "");
                 }
                 else
@@ -264,7 +267,8 @@ static int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
                     deletedfile = TRUE;
                     if (!quiet)
                     {
-                        Printf("%s  Deleted\n", (IPTR)name);
+			IPTR printarg = (IPTR)name; // because name is an array
+                        VPrintf("%s  Deleted\n", (RAWARG)&printarg);
                     }
                 }
                 deleteit = FALSE;
@@ -318,7 +322,7 @@ static int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
                     SetProtection(ap->ap_Buf, 0);
                 else
                 {
-                    Printf("%s  Not Deleted", (IPTR)ap->ap_Buf);
+                    VPrintf("%s  Not Deleted", (RAWARG)&ap->ap_Buf);
                     PrintFault(ERROR_DELETE_PROTECTED, "");
                     deleteit = FALSE;
                 }
@@ -333,7 +337,8 @@ static int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
             if (!DeleteFile(name))
             {
                 LONG ioerr = IoErr();
-                Printf("%s  Not Deleted", (IPTR)name);
+		IPTR printarg = (IPTR)name; // because name is an array
+                VPrintf("%s  Not Deleted", (RAWARG)&printarg);
                 PrintFault(ioerr, "");
                 if (ioerr == ERROR_DISK_WRITE_PROTECTED)
                 {
@@ -345,7 +350,8 @@ static int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
                 deletedfile = TRUE;
                 if (!quiet)
                 {
-                    Printf("%s  Deleted\n", (IPTR)name);
+		    IPTR printarg = (IPTR)name; // because name is an array
+                    VPrintf("%s  Deleted\n", (RAWARG)&printarg);
                 }
             }
             deleteit = FALSE;

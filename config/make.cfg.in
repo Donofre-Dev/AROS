@@ -1,4 +1,4 @@
-# Copyright © 1995-2019, The AROS Development Team. All rights reserved.
+# Copyright © 1995-2020, The AROS Development Team. All rights reserved.
 # $Id$
 #
 # Static makefile rule file for AROS.
@@ -69,12 +69,16 @@ AROS_DIR_CLASSES              := Classes
 AROS_DIR_DATATYPES            := $(AROS_DIR_CLASSES)/Datatypes
 AROS_DIR_GADGETS              := $(AROS_DIR_CLASSES)/Gadgets
 AROS_DIR_DEVS                 := Devs
+AROS_DIR_DRIVERS              := Drivers
 AROS_DIR_EXPANSION            := Expansion
 AROS_DIR_FS                   := L
 AROS_DIR_LIBRARIES            := Libs
 AROS_DIR_LOCALE               := Locale
 AROS_DIR_S                    := S
+AROS_DIR_STORAGE              := Storage
+AROS_DIR_SYSTEM               := System
 AROS_DIR_TOOLS                := Tools
+AROS_DIR_UTILITIES            := Utilities
 
 AROS_DIR_DEVELOPER            := Developer
 AROS_DIR_BIN                  := bin
@@ -99,7 +103,7 @@ AROS_EXPANSION                := $(AROSDIR)/$(AROS_DIR_EXPANSION)
 AROS_FS	                      := $(AROSDIR)/$(AROS_DIR_FS)
 AROS_FS_ARCH                  := $(AROSDIR)/$(AROS_DIR_ARCH)/$(AROS_DIR_FS)
 AROS_RESOURCES                := $(AROS_DEVS)
-AROS_DRIVERS                  := $(AROS_DEVS)/Drivers
+AROS_DRIVERS                  := $(AROS_DEVS)/$(AROS_DIR_DRIVERS)
 AROS_LIBRARIES                := $(AROSDIR)/$(AROS_DIR_LIBRARIES)
 AROS_LIBRARIES_ARCH           := $(AROSDIR)/$(AROS_DIR_ARCH)/$(AROS_DIR_LIBRARIES)
 AROS_LOCALE                   := $(AROSDIR)/$(AROS_DIR_LOCALE)
@@ -110,12 +114,13 @@ AROS_ENVARC                   := $(AROS_PREFS)/Env-Archive
 AROS_PACKAGES                 := $(AROS_ENVARC)/SYS/Packages
 AROS_PRINTERS                 := $(AROS_DEVS)/Printers
 AROS_S                        := $(AROSDIR)/$(AROS_DIR_S)
-AROS_SYSTEM                   := $(AROSDIR)/System
+AROS_STORAGE                  := $(AROSDIR)/$(AROS_DIR_STORAGE)
+AROS_SYSTEM                   := $(AROSDIR)/$(AROS_DIR_SYSTEM)
 AROS_WANDERER                 := $(AROS_SYSTEM)/Wanderer
 AROS_THEMES                   := $(AROS_PREFS)/Presets/Themes
 AROS_IMAGES                   := $(AROS_SYSTEM)/Images
 AROS_TOOLS                    := $(AROSDIR)/$(AROS_DIR_TOOLS)
-AROS_UTILITIES                := $(AROSDIR)/Utilities
+AROS_UTILITIES                := $(AROSDIR)/$(AROS_DIR_UTILITIES)
 
 AROS_CONTRIB                  := $(AROSDIR)/$(AROS_DIR_CONTRIB)
 
@@ -170,7 +175,7 @@ INFOINFO                      := $(TOOLDIR)/infoinfo$(HOST_EXE_SUFFIX)
 GENSETS                       := $(TOOLDIR)/gensets$(HOST_EXE_SUFFIX)
 COLLECT-AROS                  := $(TOOLDIR)/collect-aros$(HOST_EXE_SUFFIX)
 GENMODULE                     := $(TOOLDIR)/genmodule$(HOST_EXE_SUFFIX)
-MKKEYMAP                     := $(TOOLDIR)/mkkeymap$(HOST_EXE_SUFFIX)
+MKKEYMAP                      := $(TOOLDIR)/mkkeymap$(HOST_EXE_SUFFIX)
 SETREV                        := $(TOOLDIR)/setrev$(HOST_EXE_SUFFIX)
 @make_extra_commands@
 RESIDENT_BEGIN                := compiler/libinit/libentry
@@ -180,7 +185,7 @@ AROS_CC                       := $(TARGET_CC)
 ifneq ($(TARGET_CXX),)
     AROS_CXX                  := $(TARGET_CXX)
 else
-    AROS_CXX                  := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++
+    AROS_CXX                  := $(CROSSTOOLSDIR)/bin/$(AROS_TARGET_CPU)-aros-g++
 endif
 AROS_CXXEXTS                  := cpp cxx cc c++
 AROS_AS                       := $(TARGET_AS)
@@ -277,7 +282,7 @@ KOBJSDIR                      := $(GENDIR)/kobjs
 ifeq ($(AROS_PATH_SET),)
     TMP_TOOLDIR               := $(shell echo $(TOOLDIR) | sed 's/^\(.\):\//\/\1\//')
     TMP_CROSSTOOLSDIR         := $(shell echo $(CROSSTOOLSDIR) | sed 's/^\(.\):\//\/\1\//')
-    PATH                      := $(TMP_CROSSTOOLSDIR):$(TMP_TOOLDIR):$(TMP_TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX):$(PATH)
+    PATH                      := $(TMP_CROSSTOOLSDIR)/bin:$(TMP_TOOLDIR):$(TMP_TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX):$(PATH)
     AROS_PATH_SET             := yes
     export PATH AROS_PATH_SET
 endif

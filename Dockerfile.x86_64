@@ -32,3 +32,4 @@ RUN make -j$(getconf _NPROCESSORS_ONLN) default-x11keymaptable \
 	&& make distfiles
 
 RUN cp -fvr /work/bin/$BUILD_EXT/AROS/Developer/* $BUILD_PREFIX
+RUN cp -fvr /work/bin/$BUILD_EXT/AROS/Extras/Developer/* $BUILD_PREFIX

@@ -11,7 +11,7 @@ WORKDIR /work
 
 COPY ./ /work/
 
-run apt-get update && apt-get install -y python-mako
+run apt-get update && apt-get install -y python3-mako
 
 # Retrieve contribs: will be available in /work/contrib
 # note: dir name MUST be "contrib"

@@ -125,7 +125,7 @@ AROS_UTILITIES                := $(AROSDIR)/$(AROS_DIR_UTILITIES)
 AROS_CONTRIB                  := $(AROSDIR)/$(AROS_DIR_CONTRIB)
 
 # Absolute paths for developer directories
-AROS_DEVELOPER                := $(CROSSTOOLSDIR) 
+AROS_DEVELOPER                := $(CROSSTOOLSDIR)
 # $(AROSDIR)/$(AROS_DIR_DEVELOPER)
 AROS_SDK                      ?= $(AROS_DEVELOPER)/$(AROS_TARGET_CPU)-aros/$(AROS_DIR_SDK)
 AROS_ARCH_SDK                 ?= $(AROS_SDK)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros

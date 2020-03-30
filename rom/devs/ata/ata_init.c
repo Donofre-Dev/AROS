@@ -1,5 +1,5 @@
 /*
-    Copyright © 2004-2020, The AROS Development Team. All rights reserved
+    Copyright Â© 2004-2020, The AROS Development Team. All rights reserved
     $Id$
 
     Desc:
@@ -244,32 +244,11 @@ static int ATA_init(struct ataBase *ATABase)
     }
 #endif
 
+    InitSemaphore(&ATABase->DetectionSem);
+
     D(bug("[ATA  ] %s: Base ATA Hidd Class @ 0x%p\n", __func__, ATABase->ataClass));
 
-    /* Try to setup daemon task looking for diskchanges */
-    NEWLIST(&ATABase->Daemon_ios);
-    InitSemaphore(&ATABase->DaemonSem);
-    InitSemaphore(&ATABase->DetectionSem);
-    ATABase->daemonParent = FindTask(NULL);
-    SetSignal(0, SIGF_SINGLE);
-
-    if (!NewCreateTask(TASKTAG_PC, DaemonCode,
-                       TASKTAG_NAME       , "ATA.daemon",
-                       TASKTAG_STACKSIZE  , STACK_SIZE,
-                       TASKTAG_TASKMSGPORT, &ATABase->DaemonPort,
-                       TASKTAG_PRI        , TASK_PRI - 1,	/* The daemon should have a little bit lower Pri than handler tasks */
-                       TASKTAG_ARG1       , ATABase,
-                       TAG_DONE))
-    {
-        bug("[ATA  ] %s: Failed to start up daemon!\n", __func__);
-        return FALSE;
-    }
-
-    /* Wait for handshake */
-    Wait(SIGF_SINGLE);
-    D(bug("[ATA  ] %s: Daemon task set to 0x%p\n", __func__, ATABase->ata_Daemon));
-
-    return ATABase->ata_Daemon ? TRUE : FALSE;
+    return TRUE;
 }
 
 static int ata_expunge(struct ataBase *ATABase)
@@ -293,13 +272,7 @@ static int ata_expunge(struct ataBase *ATABase)
             /* Destroy our singletone */
             OOP_MethodID disp_msg = OOP_GetMethodID(IID_Root, moRoot_Dispose);
 
-            D(bug("[ATA  ] ata_expunge: Stopping Daemon...\n"));
-            ATABase->daemonParent = FindTask(NULL);
-            SetSignal(0, SIGF_SINGLE);
-            Signal(ATABase->ata_Daemon, SIGBREAKF_CTRL_C);
-            Wait(SIGF_SINGLE);
-
-            D(bug("[ATA  ] ata_expunge: Done, destroying subystem object\n"));
+            D(bug("[ATA  ] ata_expunge: destroying subystem object\n"));
             OOP_DoSuperMethod(ataNode->ac_Class, ataNode->ac_Object, &disp_msg);
             FreeMem(ataNode, sizeof(struct ata_Controller));
         }
